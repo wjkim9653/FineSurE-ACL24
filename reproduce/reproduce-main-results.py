@@ -226,42 +226,67 @@ def completeness_and_conciseness_eval(results, logfile):
     logging.info('\n[Completeness Evaluation]')
     logfile.write('\n[Completeness Evaluation]\n')
 
-    pearson_corr = pearsonr(full_results['gt_completeness_scores'], full_results['pred_completeness_scores'])
-    spearman_corr = spearmanr(full_results['gt_completeness_scores'], full_results['pred_completeness_scores'])
-
     logging.info('* Summary-level:')
     logfile.write('* Summary-level:\n')
-    logging.info(f"\t-Pearson: {pearson_corr}")
-    logfile.write(f"\t-Pearson: {pearson_corr}\n")
-    logging.info(f"\t-Spearman: {spearman_corr}")
-    logfile.write(f"\t-Spearman: {spearman_corr}\n")
+    try:
+        pearson_corr = pearsonr(full_results['gt_completeness_scores'], full_results['pred_completeness_scores'])
+        logging.info(f"\t-Pearson: {pearson_corr}")
+        logfile.write(f"\t-Pearson: {pearson_corr}\n")
+    except Exception as e:
+            logging.info(f'Failed to Calculate Pearson Corr. : {e}')
+            logfile.write(f'Failed to Calculate Pearson Corr. : {e}')
+    try:
+        spearman_corr = spearmanr(full_results['gt_completeness_scores'], full_results['pred_completeness_scores'])
+        logging.info(f"\t-Spearman: {spearman_corr}")
+        logfile.write(f"\t-Spearman: {spearman_corr}\n")
+    except Exception as e:
+        logging.info(f'Failed to Calculate Spearman Corr. : {e}')
+        logfile.write(f'Failed to Calculate Spearman Corr. : {e}')
+
 
     logging.info('* System-level:')
     logfile.write('* System-level:\n')
     # model-wise ranking 
-    _rank_correlation = rank_correlation(model_wise_results, key="completeness_scores")
-    logging.info(f"\t-Rank Correlation: {_rank_correlation}")
-    logfile.write(f"\t-Rank Correlation: {_rank_correlation}\n")
+    try:
+        _rank_correlation = rank_correlation(model_wise_results, key="completeness_scores")
+        logging.info(f"\t-Rank Correlation: {_rank_correlation}")
+        logfile.write(f"\t-Rank Correlation: {_rank_correlation}\n")
+    except Exception as e:
+        logging.info(f'Failed to Calculate Rank Corr. : {e}')
+        logfile.write(f'Failed to Calculate Rank Corr. : {e}')
+
+
 
     logging.info('\n[Conciseness Evaluation]')
     logfile.write('\n[Conciseness Evaluation]\n')
-
-    pearson_corr = pearsonr(full_results['gt_conciseness_scores'], full_results['pred_conciseness_scores'])
-    spearman_corr = spearmanr(full_results['gt_conciseness_scores'], full_results['pred_conciseness_scores'])
-
     logging.info('* Summary-level:')
     logfile.write('* Summary-level:\n')
-    logging.info(f"\t-Pearson: {pearson_corr}")
-    logfile.write(f"\t-Pearson: {pearson_corr}\n")
-    logging.info(f"\t-Spearman: {spearman_corr}")
-    logfile.write(f"\t-Spearman: {spearman_corr}\n")
+    try:
+        pearson_corr = pearsonr(full_results['gt_conciseness_scores'], full_results['pred_conciseness_scores'])
+        logging.info(f"\t-Pearson: {pearson_corr}")
+        logfile.write(f"\t-Pearson: {pearson_corr}\n")
+    except Exception as e:
+        logging.info(f'Failed to Calculate Pearson Corr. : {e}')
+        logfile.write(f'Failed to Calculate Pearson Corr. : {e}')
+
+    try:
+        spearman_corr = spearmanr(full_results['gt_conciseness_scores'], full_results['pred_conciseness_scores'])
+        logging.info(f"\t-Spearman: {spearman_corr}")
+        logfile.write(f"\t-Spearman: {spearman_corr}\n")
+    except Exception as e:
+        logging.info(f'Failed to Calculate Spearman Corr. : {e}')
+        logfile.write(f'Failed to Calculate Spearman Corr. : {e}')
 
     logging.info('* System-level:')
     logfile.write('* System-level:\n')
     # model-wise ranking 
-    _rank_correlation = rank_correlation(model_wise_results, key="conciseness_scores")
-    logging.info(f"\t-Rank Correlation: {_rank_correlation}")
-    logfile.write(f"\t-Rank Correlation: {_rank_correlation}\n")
+    try:
+        _rank_correlation = rank_correlation(model_wise_results, key="conciseness_scores")
+        logging.info(f"\t-Rank Correlation: {_rank_correlation}")
+        logfile.write(f"\t-Rank Correlation: {_rank_correlation}\n")
+    except Exception as e:
+        logging.info(f'Failed to Calculate Rank Corr. : {e}')
+        logfile.write(f'Failed to Calculate Rank Corr. : {e}')
 
 
     success_rate = cnt_success_inference / len(conv_ids)

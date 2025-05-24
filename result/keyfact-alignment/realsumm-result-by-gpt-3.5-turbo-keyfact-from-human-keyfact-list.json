@@ -1,0 +1,34 @@
+
+
+
+[Evaluation Results]
+
+* completeness score per model (higher is better)
+bart_out_ext	44.4%
+heter_graph_out	58.3%
+t5_out_base	30.0%
+unilm_out_v2	66.7%
+presumm_out_trans_abs	0.0%
+t5_out_large	50.0%
+neusumm_out	33.3%
+pnbert_out_bert_tf_pn	28.6%
+
+* completeness model ranking (left is better)
+['unilm_out_v2', 'heter_graph_out', 't5_out_large', 'bart_out_ext', 'neusumm_out', 't5_out_base', 'pnbert_out_bert_tf_pn', 'presumm_out_trans_abs']
+
+* conciseness score per model (higher is better)
+bart_out_ext	75.0%
+heter_graph_out	100.0%
+t5_out_base	100.0%
+unilm_out_v2	62.5%
+presumm_out_trans_abs	0.0%
+t5_out_large	66.7%
+neusumm_out	55.6%
+pnbert_out_bert_tf_pn	60.0%
+
+* conciseness model ranking (left is better)
+['heter_graph_out', 't5_out_base', 'bart_out_ext', 't5_out_large', 'unilm_out_v2', 'pnbert_out_bert_tf_pn', 'neusumm_out', 'presumm_out_trans_abs']
+
+* success rate: 80.0%
+
+

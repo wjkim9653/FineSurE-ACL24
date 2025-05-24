@@ -1,0 +1,36 @@
+
+
+
+[Evaluation Results]
+
+* completeness score per model (higher is better)
+banditsumm_out	45.5%
+two_stage_rl_out	55.8%
+heter_graph_out	58.3%
+presumm_out_trans_abs	14.3%
+unilm_out_v2	54.5%
+t5_out_base	72.7%
+fast_abs_rl_out_rerank	55.6%
+pnbert_out_bert_tf_pn	55.6%
+bart_out_abs	28.6%
+
+* completeness model ranking (left is better)
+['t5_out_base', 'heter_graph_out', 'two_stage_rl_out', 'fast_abs_rl_out_rerank', 'pnbert_out_bert_tf_pn', 'unilm_out_v2', 'banditsumm_out', 'bart_out_abs', 'presumm_out_trans_abs']
+
+* conciseness score per model (higher is better)
+banditsumm_out	66.7%
+two_stage_rl_out	66.7%
+heter_graph_out	33.3%
+presumm_out_trans_abs	33.3%
+unilm_out_v2	75.0%
+t5_out_base	100.0%
+fast_abs_rl_out_rerank	50.0%
+pnbert_out_bert_tf_pn	100.0%
+bart_out_abs	50.0%
+
+* conciseness model ranking (left is better)
+['t5_out_base', 'pnbert_out_bert_tf_pn', 'unilm_out_v2', 'banditsumm_out', 'two_stage_rl_out', 'fast_abs_rl_out_rerank', 'bart_out_abs', 'heter_graph_out', 'presumm_out_trans_abs']
+
+* success rate: 100.0%
+
+

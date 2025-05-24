@@ -1,0 +1,32 @@
+
+
+
+[Evaluation Results]
+
+* completeness score per model (higher is better)
+t5_out_large	75.0%
+ptr_generator_out_pointer_gen_cov	85.7%
+unilm_out_v1	87.5%
+refresh_out	100.0%
+unilm_out_v2	68.8%
+presumm_out_trans_abs	100.0%
+pnbert_out_bert_tf_pn	100.0%
+
+* completeness model ranking (left is better)
+['refresh_out', 'presumm_out_trans_abs', 'pnbert_out_bert_tf_pn', 'unilm_out_v1', 'ptr_generator_out_pointer_gen_cov', 't5_out_large', 'unilm_out_v2']
+
+* conciseness score per model (higher is better)
+t5_out_large	87.5%
+ptr_generator_out_pointer_gen_cov	100.0%
+unilm_out_v1	100.0%
+refresh_out	100.0%
+unilm_out_v2	87.5%
+presumm_out_trans_abs	100.0%
+pnbert_out_bert_tf_pn	100.0%
+
+* conciseness model ranking (left is better)
+['ptr_generator_out_pointer_gen_cov', 'unilm_out_v1', 'refresh_out', 'presumm_out_trans_abs', 'pnbert_out_bert_tf_pn', 't5_out_large', 'unilm_out_v2']
+
+* success rate: 100.0%
+
+

@@ -1,0 +1,32 @@
+
+
+
+[Evaluation Results]
+
+* completeness score per model (higher is better)
+presumm_out_abs	100.0%
+bottom_up_out	80.0%
+pnbert_out_bert_tf_sl	100.0%
+fast_abs_rl_out_rerank	92.9%
+semsim_out	100.0%
+bart_out_ext	87.5%
+t5_out_base	100.0%
+
+* completeness model ranking (left is better)
+['presumm_out_abs', 'pnbert_out_bert_tf_sl', 'semsim_out', 't5_out_base', 'fast_abs_rl_out_rerank', 'bart_out_ext', 'bottom_up_out']
+
+* conciseness score per model (higher is better)
+presumm_out_abs	100.0%
+bottom_up_out	100.0%
+pnbert_out_bert_tf_sl	85.7%
+fast_abs_rl_out_rerank	75.0%
+semsim_out	100.0%
+bart_out_ext	83.3%
+t5_out_base	100.0%
+
+* conciseness model ranking (left is better)
+['presumm_out_abs', 'bottom_up_out', 'semsim_out', 't5_out_base', 'pnbert_out_bert_tf_sl', 'bart_out_ext', 'fast_abs_rl_out_rerank']
+
+* success rate: 100.0%
+
+

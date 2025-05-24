@@ -1,0 +1,32 @@
+
+
+
+[Evaluation Results]
+
+* completeness score per model (higher is better)
+presumm_out_trans_abs	100.0%
+matchsumm_out	93.8%
+pnbert_out_bert_lstm_pn_rl	100.0%
+neusumm_out	100.0%
+presumm_out_abs	100.0%
+t5_out_11B	100.0%
+pnbert_out_bert_tf_sl	90.9%
+
+* completeness model ranking (left is better)
+['presumm_out_trans_abs', 'pnbert_out_bert_lstm_pn_rl', 'neusumm_out', 'presumm_out_abs', 't5_out_11B', 'matchsumm_out', 'pnbert_out_bert_tf_sl']
+
+* conciseness score per model (higher is better)
+presumm_out_trans_abs	100.0%
+matchsumm_out	100.0%
+pnbert_out_bert_lstm_pn_rl	100.0%
+neusumm_out	100.0%
+presumm_out_abs	100.0%
+t5_out_11B	100.0%
+pnbert_out_bert_tf_sl	75.0%
+
+* conciseness model ranking (left is better)
+['presumm_out_trans_abs', 'matchsumm_out', 'pnbert_out_bert_lstm_pn_rl', 'neusumm_out', 'presumm_out_abs', 't5_out_11B', 'pnbert_out_bert_tf_sl']
+
+* success rate: 100.0%
+
+

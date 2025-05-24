@@ -1,0 +1,32 @@
+
+
+
+[Evaluation Results]
+
+* completeness score per model (higher is better)
+ptr_generator_out_pointer_gen_cov	31.0%
+pnbert_out_bert_tf_pn	56.7%
+semsim_out	25.0%
+refresh_out	44.4%
+t5_out_11B	11.1%
+presumm_out_ext_abs	20.0%
+bart_out_abs	16.7%
+
+* completeness model ranking (left is better)
+['pnbert_out_bert_tf_pn', 'refresh_out', 'ptr_generator_out_pointer_gen_cov', 'semsim_out', 'presumm_out_ext_abs', 'bart_out_abs', 't5_out_11B']
+
+* conciseness score per model (higher is better)
+ptr_generator_out_pointer_gen_cov	66.7%
+pnbert_out_bert_tf_pn	100.0%
+semsim_out	66.7%
+refresh_out	75.0%
+t5_out_11B	66.7%
+presumm_out_ext_abs	100.0%
+bart_out_abs	50.0%
+
+* conciseness model ranking (left is better)
+['pnbert_out_bert_tf_pn', 'presumm_out_ext_abs', 'refresh_out', 'ptr_generator_out_pointer_gen_cov', 'semsim_out', 't5_out_11B', 'bart_out_abs']
+
+* success rate: 100.0%
+
+

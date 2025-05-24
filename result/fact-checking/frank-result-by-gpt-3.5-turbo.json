@@ -1,0 +1,26 @@
+
+
+
+[Evaluation Results]
+* sentence-level factuality error ratio per model (lower is better)
+PtGen	100.0%
+pgn	100.0%
+TranS2S	100.0%
+bert_sum	33.3%
+bart	50.0%
+TConvS2S	100.0%
+
+* summary-level faithfulness score per model (higher is better)
+PtGen	0.0%
+pgn	0.0%
+TranS2S	0.0%
+bert_sum	66.7%
+bart	50.0%
+TConvS2S	0.0%
+
+* system-level model ranking (left is better)
+['bert_sum', 'bart', 'PtGen', 'pgn', 'TranS2S', 'TConvS2S']
+
+* success rate: 100.0%
+
+

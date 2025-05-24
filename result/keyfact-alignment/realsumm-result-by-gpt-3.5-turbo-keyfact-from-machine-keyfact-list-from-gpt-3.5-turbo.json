@@ -1,0 +1,26 @@
+
+
+
+[Evaluation Results]
+
+* completeness score per model (higher is better)
+banditsumm_out	80.0%
+presumm_out_trans_abs	25.0%
+t5_out_large	100.0%
+pnbert_out_bert_tf_pn	77.8%
+
+* completeness model ranking (left is better)
+['t5_out_large', 'banditsumm_out', 'pnbert_out_bert_tf_pn', 'presumm_out_trans_abs']
+
+* conciseness score per model (higher is better)
+banditsumm_out	100.0%
+presumm_out_trans_abs	25.0%
+t5_out_large	100.0%
+pnbert_out_bert_tf_pn	100.0%
+
+* conciseness model ranking (left is better)
+['banditsumm_out', 't5_out_large', 'pnbert_out_bert_tf_pn', 'presumm_out_trans_abs']
+
+* success rate: 40.0%
+
+

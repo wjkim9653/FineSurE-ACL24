@@ -1,0 +1,25 @@
+[Faithfulness Evaluation]
+* Sentence-level
+	-Balanced Accuracy:100.0%
+* Summary-level:
+	-Pearson: PearsonRResult(statistic=1.0, pvalue=0.0)
+	-Spearman: SignificanceResult(statistic=1.0, pvalue=0.0)
+* System-level:
+	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
+* Success ratio 100.0%
+
+[Completeness Evaluation]
+* Summary-level:
+	-Pearson: PearsonRResult(statistic=0.7481796611669984, pvalue=0.01281445979166272)
+	-Spearman: SignificanceResult(statistic=0.7477238187264795, pvalue=0.012899731006897746)
+* System-level:
+	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
+
+[Conciseness Evaluation]
+* Summary-level:
+	-Pearson: PearsonRResult(statistic=0.7382094644378352, pvalue=0.014771487094533456)
+	-Spearman: SignificanceResult(statistic=0.6156228852755918, pvalue=0.05811849253610802)
+* System-level:
+	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
+
+* Success ratio 100.0%

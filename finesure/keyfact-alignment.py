@@ -3,6 +3,8 @@ import json
 import sys
 import os
 import random
+import concurrent.futures
+from tqdm import tqdm
 from utils import get_response
 from utils import get_keyfact_alighment_prompt, parsing_llm_keyfact_alighment_output
 from utils import compute_completeness_percentage_score, compute_conciseness_percentage_score
@@ -10,13 +12,13 @@ from utils import get_keyfact_extraction_prompt, keyfact_extraction
 from dotenv import load_dotenv
 load_dotenv()
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 
 # api key
 _api_key = os.getenv("OPENAI_API_KEY")
 _client = openai.OpenAI(api_key=_api_key)
 
-def main(input_path, keyfact_path, output_path, log_interval=2, model='gpt-4o-2024-05-13', sample_cnt=100):
+def main(input_path, keyfact_path, output_path, log_interval=2, model='gpt-4o-2024-05-13', sample_cnt=100, position=0):
     '''
     Argument:
         input_path: path for input data
@@ -81,11 +83,11 @@ def main(input_path, keyfact_path, output_path, log_interval=2, model='gpt-4o-20
     model_labels = {}
     
     # writer to store the output from LLM evaluation
-    raw_data_writer = open(os.path.join(output_path, f'realsumm-raw-data-by-{model}-keyfact-from-{keyfact_path}.json'), 'w')
-    result_writer = open(os.path.join(output_path, f'realsumm-result-by-{model}-keyfact-from-{keyfact_path}.json'), 'w')
+    raw_data_writer = open(os.path.join(output_path, f'realsumm-raw-data-by-{model}-keyfact-from-{os.path.splitext(os.path.basename(keyfact_path))[0]}.json'), 'w')
+    result_writer = open(os.path.join(output_path, f'realsumm-result-by-{model}-keyfact-from-{os.path.splitext(os.path.basename(keyfact_path))[0]}.json'), 'w')
 
     # processes each data instance using for loop
-    for input_id, input_json in enumerate(sampled_inputs):
+    for input_id, input_json in enumerate(tqdm(sampled_inputs, desc=f'[#{position}] {model}', position=position, leave=False)):
 
         # input json parsing
         doc_id = input_json['doc_id']
@@ -180,6 +182,11 @@ def main(input_path, keyfact_path, output_path, log_interval=2, model='gpt-4o-20
     text_output = log_results_faithfulness(model_labels=model_labels)
     result_writer.write(text_output)
            
+def run_per_model_keyfact(args):
+    input_path, keyfact_path, output_path, log_interval, model, sample_cnt, model_keyfact = args
+    position = MODEL_POSITION_MAP.get(model_keyfact,0)
+    main(input_path, keyfact_path, output_path, log_interval, model, sample_cnt, position)
+    return model_keyfact
 
 if __name__ == "__main__":
     
@@ -204,14 +211,14 @@ if __name__ == "__main__":
 
     input_path = sys.argv[1]
     keyfact_path = sys.argv[2]
-    output_folder = sys.argv[3]
+    output_path = sys.argv[3]
     sample_cnt = int(sys.argv[4])
     
     # log logs every 10 inferences
     log_interval = 10
     
-    if not os.path.isdir(output_folder):
-        os.mkdir(output_folder)
+    if not os.path.isdir(output_path):
+        os.mkdir(output_path)
 
     models = [
         'gpt-3.5-turbo',
@@ -229,5 +236,19 @@ if __name__ == "__main__":
         for model in models
     }
     
-    for model, keyfact_path in models_keyfacts_config.items():
-        main(input_path, keyfact_path, output_folder, log_interval, model, sample_cnt)
+    # 각 모델별로 병렬 실행하기 위한 run_per_model_keyfact() arguments
+    MODEL_POSITION_MAP = {
+        f'{model} & {keyfact}': i+1 
+        for i, (model, keyfact) in enumerate(models_keyfacts_config.items())
+    }
+    args_list = [
+        (input_path, keyfact_path, output_path, log_interval, model, sample_cnt, f'{model}-{keyfact_path}') 
+        for model, keyfact_path in models_keyfacts_config.items()
+    ]
+    max_workers = 8
+    
+
+    # for model, keyfact_path in models_keyfacts_config.items():
+    #     main(input_path, keyfact_path, output_path, log_interval, model, sample_cnt)
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+        results = list(tqdm(executor.map(run_per_model_keyfact, args_list), total=len(models), desc=f"✅ KeyFact-Alignment for {len(models_keyfacts_config)} Model & KeyFact List Pairs, Running in Parallel w/ {max_workers} Workers"))
