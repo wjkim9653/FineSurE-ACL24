@@ -16,10 +16,14 @@ def get_response(client, prompt, model, temperature=0.0):
         text_response: the output from LLMs
     '''
 
-    response = client.chat.completions.create(
-    model=model,
-    messages=[{"role": "user", "content": prompt}],
-    temperature=temperature)
+    params = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}]
+    }
+    if all(reasoning_model_name not in model for reasoning_model_name in ['o1', 'o3', 'o4']):
+        params["temperature"] = temperature
+    
+    response = client.chat.completions.create(**params)
     text_response = response.choices[0].message.content
 
     return text_response

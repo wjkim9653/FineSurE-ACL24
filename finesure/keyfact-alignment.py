@@ -29,7 +29,7 @@ def main(input_path, keyfact_path, output_path, print_interval=2, model=_model, 
         model: OpenAI API Compatible Models ID to Test
         sample_cnt: # of Samples from realsumm dataset, must be integer, defaults to 100
     '''
-    logging.info(f"Running KeyFact-Alignment with Model: {model}")
+    logging.info(f"🤖 Running KeyFact-Alignment with Model: {model}")
 
     # loads data for completeness and conciseness evaluation using FineSurE
     inputs = []
