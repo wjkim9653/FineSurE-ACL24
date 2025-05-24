@@ -4,21 +4,29 @@ import sys
 import os
 from utils import get_response, parsing_llm_fact_checking_output, compute_faithfulness_percentage_score
 from utils import get_fact_checking_prompt
+from dotenv import load_dotenv
+load_dotenv()
+import logging
+logging.basicConfig(level=logging.INFO)
+import random
 
 # api key
-_api_key = #'your openai api key'
+_api_key = os.getenv("OPENAI_API_KEY")
 _client = openai.OpenAI(api_key=_api_key)
 #_model = "gpt-3.5-turbo"
 #_model = "gpt-4-1106-preview"
-_model = "gpt-4o-2024-05-13"
+_model = "gpt-4o-2024-05-13"  # fallback (in case no `models` list is defined when calling main())
 
-def main(input_path, output_path, print_interval=2):
+def main(input_path, output_path, print_interval=2, model=_model, sample_cnt=100):
     '''
     Argument:
         input_path: path for input data
         output_path: path for output data (saving the logs and the eval results)
-        print_interval: print the percentage scores every 'print_interval' 
+        print_interval: print the percentage scores every 'print_interval'
+        model: OpenAI API Compatible Models ID to Test
+        sample_cnt: # of Samples from realsumm dataset, must be integer, defaults to 100
     '''
+    logging.info(f"Running Fact-Checking with Model: {model}")
 
     # loads data for faithfulness evaluation using FineSurE
     inputs = []
@@ -26,17 +34,19 @@ def main(input_path, output_path, print_interval=2):
         line = json.loads(line)
         inputs.append(line)
 
+    sampled_inputs = random.sample(inputs, sample_cnt)  # 100개 랜덤샘플링한 데이터셋으로 진행
+
     # variables for evaluation 
     cnt_total_inference = 0
     cnt_success_inference = 0
     model_labels = {}
     
     # writer to store the output from LLM evaluation
-    raw_data_writer = open(os.path.join(output_path, 'raw-data.json'), 'w')
-    result_writer = open(os.path.join(output_path, 'result.json'), 'w')
+    raw_data_writer = open(os.path.join(output_path, f'frank-raw-data-by-{model}.json'), 'w')
+    result_writer = open(os.path.join(output_path, f'frank-result-by-{model}.json'), 'w')
 
     # processes each data instance using for loop
-    for input_id, input_json in enumerate(inputs):
+    for input_id, input_json in enumerate(sampled_inputs):
 
         # input json parsing
         doc_id = input_json['doc_id']
@@ -48,7 +58,7 @@ def main(input_path, output_path, print_interval=2):
         prompt = get_fact_checking_prompt(input=src, sentences=sentences)
 
         # get response from LLMs
-        output = get_response(client=_client, prompt=prompt, model=_model)
+        output = get_response(client=_client, prompt=prompt, model=model)
  
         input_json['llm_output'] = output
         input_json['pred_faithfulness_labels'], input_json['pred_faithfulness_error_type'] = parsing_llm_fact_checking_output(output)
@@ -129,17 +139,29 @@ if __name__ == "__main__":
         1) cd CodeRelease
         
         2) python finesure/fact-checking.py [input-path] [output-folder]
-        e.g., python finesure/fact-checking.py dataset/frank/frank-data-sample-10.json result/fact-checking
+        e.g., python finesure/fact-checking.py dataset/frank/frank-data.json result/fact-checking
     '''
 
     input_path = sys.argv[1]
     output_path = sys.argv[2]
+    sample_cnt = sys.argv[3]
 
     # print logs every 10 inferences
     print_interval = 10
 
+    models = [
+        'gpt-3.5-turbo',
+        'gpt-4-1106-preview',
+        'gpt-4o-2024-05-13',
+        'gpt-4.1-2025-04-14',
+        'gpt-4.1-mini-2025-04-14',
+        'gpt-4.1-nano-2025-04-14',
+        'o3-2025-04-16',
+        'o4-mini-2025-04-16'
+    ]
+
     if not os.path.isdir(output_path):
         os.mkdir(output_path)
 
-    main(input_path, output_path, print_interval)
-
+    for model in models:
+        main(input_path, output_path, print_interval, model, sample_cnt)

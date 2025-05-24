@@ -1,7 +1,7 @@
 '''
 This is for providing fundamental functions for FineSurE.
 '''
-import ast
+import ast, time, re, json, logging
 
 ERROR_TYPES = ['out-of-context error', 'entity error', 'predicate error', 'circumstantial error', 'grammatical error', 'coreference error', 'linking error', 'other error']
 
@@ -148,6 +148,81 @@ def parsing_llm_fact_checking_output(output):
             print('parsing error:', e)
             return [], []
 
+'''
+Two functions for keyfact extraction (w/ LLM)
+'''
+def get_keyfact_extraction_prompt(sentences: list):
+    ''' A function to define the input prompt for keyfact-extraction
+    Args:
+        sentences: list of summary sentences
+    Return:
+        prompt: the final input prompt
+    '''
+
+    summary = ['[' + str(line_num + 1) + '] ' + sentence for line_num, sentence in enumerate(sentences)]
+    summary = '\n'.join(summary)
+    prompt =\
+'''
+You will be provided with a summary.
+Your task is to decompose the summary into a set of "key facts".
+A "key fact" is a single fact written as briefly and clearly as possible, encompassing at most 2-3 entities.
+
+Here are nine examples of key facts to illustrate the desired level of granularity:
+* Kevin Carr set off on his journey from Haytor.
+* Kevin Carr set off on his journey from Dartmoor.
+* Kevin Carr set off on his journey in July 2013.
+* Kevin Carr is less than 24 hours away from completing his trip.
+* Kevin Carr ran around the world unsupported.
+* Kevin Carr ran with his tent.
+* Kevin Carr is set to break the previous record.
+* Kevin Carr is set to break the record by 24 hours.
+* The previous record was held by an Australian.
+
+Instruction:
+First, read the summary carefully.
+Second, decompose the summary into (at most 16) key facts.
+
+Provide your answer in Json format.
+The answer should be a dictionary with the key "key facts" containing the key facts as a list:
+{"key facts": ["first key fact", "second key facts", "third key facts"]}
+
+Summary:
+%s
+''' % (summary)
+    
+    return prompt
+
+def keyfact_extraction(client, prompt, model, temperature=0.0, max_retries=2):
+    '''
+    returns:
+        llm_output: str
+        keyfacts: list (of str)
+    '''
+    def parse_llm_output_to_list(llm_output_str):
+        cleaned = re.sub(r"^```(?:json)?\n|\n```$", "", llm_output_str.strip(), flags=re.DOTALL)
+        try:
+            parsed_json = json.loads(cleaned)
+            return parsed_json.get("key facts", [])
+        except json.JSONDecodeError as e:
+            logging.warning(f"JSON parse error: {e}")
+            return []
+
+    for attempt in range(1, max_retries+1):
+        try:
+            llm_output = get_response(client, prompt, model, temperature)
+            keyfacts = parse_llm_output_to_list(llm_output_str=llm_output)
+            if keyfacts:
+                return llm_output, keyfacts
+            else:
+                raise ValueError("Parsed KeyFacts List is Empty")
+        except Exception as e:  # 실패할 경우 재시도
+            logging.warning(f"[Attempt {attempt}] KeyFact-Extraction Fialed: {e}")
+            if attempt < max_retries:
+                time.sleep(1)
+            else:
+                logging.error("All Retry Attempts Failed")
+                return "", []  # fallback
+    return "", []  # fallback
 
 '''
 Two functions for keyfact alignment

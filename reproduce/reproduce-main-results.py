@@ -1,4 +1,3 @@
-
 import json
 import sys
 import numpy as np
@@ -25,7 +24,7 @@ def main(frank_result_path, realsumm_result_path):
     completeness_and_conciseness_eval(realsumm_results)
 
 
-def faithfulness_eval(results):
+def faithfulness_eval(results: list):
     '''
     A function to evaluate the results from FineSurE on faithfulness at the three different levels
     '''
@@ -63,17 +62,17 @@ def faithfulness_eval(results):
         conv_ids.append(conv_id + model)
 
         # get gt labels and pred labels
-        gt_faithfulness_binary_labels = get_aggregate_gt_labels(result['raw_annotations'], key="factuality_labels")
-        pred_faithfulness_binary_labels = result['pred_faithfulness_labels']
+        gt_faithfulness_binary_labels = get_aggregate_gt_labels(result['raw_annotations'], key="factuality_labels")  # 문장수(라벨수)만큼 담긴 리스트로 반환됨
+        pred_faithfulness_binary_labels = result['pred_faithfulness_labels']  # 문장수(라벨수)만큼 담긴 리스트로 반환됨
 
         if len(gt_faithfulness_binary_labels) != len(pred_faithfulness_binary_labels):
-            # failure cases
+            # failure cases → 문장수와 상응 라벨수가 동일하지 않는 경우에 해당
             continue
 
         _gt_faithfulness_binary_labels, _pred_faithfulness_binary_labels = [], []
         for idx, item in enumerate(gt_faithfulness_binary_labels):
             # exception handler
-            if item != 'None':
+            if item != 'None':  # 앞서 gt_faithfulness_binary_labels 구하기 위해 get_aggregate_gt_labels() 함수 실행할 때, 특정 요약문장에 대한 annotator label이 누락된 엣지케이스 대응해야 하므로 조건문
                 _gt_faithfulness_binary_labels.append(gt_faithfulness_binary_labels[idx])
                 _pred_faithfulness_binary_labels.append(pred_faithfulness_binary_labels[idx])
         gt_faithfulness_binary_labels, pred_faithfulness_binary_labels = np.array(_gt_faithfulness_binary_labels), np.array(_pred_faithfulness_binary_labels)
@@ -90,8 +89,8 @@ def faithfulness_eval(results):
         cnt_success_inference += 1
   
         #### compute summary-level
-        gt_faithfulness_score = compute_faithfulness_percentage_score(gt_faithfulness_binary_labels) 
-        pred_faithfulness_score = compute_faithfulness_percentage_score(pred_faithfulness_binary_labels) 
+        gt_faithfulness_score = compute_faithfulness_percentage_score(gt_faithfulness_binary_labels)
+        pred_faithfulness_score = compute_faithfulness_percentage_score(pred_faithfulness_binary_labels)
 
         full_results['gt_faithfulness_binary_labels'].extend(gt_faithfulness_binary_labels)
         full_results['pred_faithfulness_binary_labels'].extend(pred_faithfulness_binary_labels)
@@ -244,7 +243,7 @@ def completeness_and_conciseness_eval(results):
     print('\n* Success ratio', '{:.1%}'.format(success_rate))
   
 
-def get_aggregate_gt_labels(raw_annotations, key):
+def get_aggregate_gt_labels(raw_annotations:dict, key:str):
     '''
     A function to generate the aggregated human labels from three annotators
     Args:
@@ -260,26 +259,26 @@ def get_aggregate_gt_labels(raw_annotations, key):
 
     merged_gt_labels = []
     for worker_id, annotation in raw_annotations.items():
-        gt_labels = annotation[key]    
-        merged_gt_labels.append(gt_labels)
+        gt_labels = annotation[key]  # type(gt_labels): list (e.g. [1])
+        merged_gt_labels.append(gt_labels)  # type(merged_gt_labels): list of lists (e.g. [[1], [1], [0]])
 
     final_labels = []
-    merged_gt_labels = np.array(merged_gt_labels)
-    num_labels = len(merged_gt_labels[-1])
+    merged_gt_labels = np.array(merged_gt_labels)  # 2차원 numpy array
+    num_labels = len(merged_gt_labels[-1])  # 문장수(상응라벨수)가 1개 넘는 경우도 있으므로 (주석 예시는 문장수 1개를 상정함)
 
     for sent_idx in range(num_labels):
-        _column = merged_gt_labels[:, sent_idx]
-        _column = [float(item) for item in _column if item != 'None']
+        _column = merged_gt_labels[:, sent_idx]  # e.g. → array([1, 1, 0])  ← 각 annotator가 그 문장에 준 라벨
+        _column = [float(item) for item in _column if item != 'None']  # e.g. → [1.0, 1.0, 0.0]
 
         if len(_column) <= 1:
             final_labels.append('None')
         else:
-            final_label = max(set(_column), key = _column.count)
+            final_label = max(set(_column), key = _column.count)  # 가장 많이 등장한 값을 final_label로 (e.g. 위 예시대로면 1.0이 final label)
             final_labels.append(float(final_label))
 
     assert len(final_labels) == num_labels
 
-    return final_labels
+    return final_labels  # gt annotation에서 가장 많이 등장한 값을 담은 리스트 (e.g. [1.0]) 반환
 
 
 def balancedAcc(gt, pred):

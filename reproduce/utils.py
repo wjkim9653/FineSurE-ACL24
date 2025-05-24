@@ -3,7 +3,16 @@ This is for providing fundamental functions for FineSurE.
 '''
 import ast
 
-ERROR_TYPES = ['out-of-context error', 'entity error', 'predicate error', 'circumstantial error', 'grammatical error', 'coreference error', 'linking error', 'other error']
+ERROR_TYPES = [
+    'out-of-context error', 
+    'entity error', 
+    'predicate error', 
+    'circumstantial error', 
+    'grammatical error', 
+    'coreference error', 
+    'linking error', 
+    'other error'
+]
 
 def get_response(client, prompt, model, temperature=0.0):
 
@@ -17,9 +26,10 @@ def get_response(client, prompt, model, temperature=0.0):
     '''
 
     response = client.chat.completions.create(
-    model=model,
-    messages=[{"role": "user", "content": prompt}],
-    temperature=temperature)
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=temperature,
+    )
     text_response = response.choices[0].message.content
 
     return text_response
@@ -30,7 +40,7 @@ def get_response(client, prompt, model, temperature=0.0):
 Two functions for fact checking
 '''
 def get_fact_checking_prompt(input, sentences):
-    
+
     ''' A function to define the input prompt
     Args:
         input: input document
@@ -86,24 +96,24 @@ def parsing_llm_fact_checking_output(output):
     try:
         start_idx = output.find('[')
 
-        if start_idx != -1:
+        if start_idx != -1:  # 1개 이상 json 담긴 list로 출력된 경우
             end_idx = output.find(']')
-            output = output[start_idx:end_idx+1]
-            output = output.replace('\n','')
-            output = ast.literal_eval(output)
+            output = output[start_idx:end_idx+1]  # Type은 그대로 str, 단 list of dict 형태 제외한 여타 출력부 제거됨
+            output = output.replace('\n','')  # LLM 출력에 포함되어있을 수 있는 개행문자 삭제
+            output = ast.literal_eval(output)  # list of dict 형태의 str 타입인 output을 실제 파이썬 list 객체로 변환
 
             pred_labels, pred_types = [], []
             for out in output:
                 category = out["category"]
-                category = category.replace('\n', '').replace('[', '').replace(']', '')
-                if category.lower() == "no error":
-                    pred_labels.append(0)
-                else:
-                    pred_labels.append(1)
-                pred_types.append(category)
+                category = category.replace('\n', '').replace('[', '').replace(']', '')  # 모델 출력에서 불필요한 개행문자나 리스트 브래킷 포함되는 경우가 있었나봄
+                if category.lower() == "no error":  # 요약문장이 factual error를 포함하고 있지 않은 것으로 모델이 예측한 경우
+                    pred_labels.append(0)  # no factuality error에 해당하는 label인 0 추가
+                else:  # 요약문장이 factual error 포함하고 있는 것으로 모델이 예측한 경우
+                    pred_labels.append(1)  # factuality error에 해당하는 label인 1 추가
+                pred_types.append(category)  # factuality error 유무와 무관하게 모델이 분류한 category는 전부 pred_types에 추가
             return pred_labels, pred_types
         
-        else:
+        else:  # list 형태로 출력되지 않은 경우 (단일 Json인 경우)
             start_idx = output.find('{')
             end_idx = output.find('}')
             output = output[start_idx:end_idx+1]
@@ -152,7 +162,7 @@ def parsing_llm_fact_checking_output(output):
 '''
 Two functions for keyfact alignment
 '''
-def get_keyfact_alighment_prompt(keyfacts, sentences):
+def get_keyfact_alighment_prompt(keyfacts: list, sentences: list):
  
     ''' A function to define the input prompt
     Args:
@@ -162,10 +172,17 @@ def get_keyfact_alighment_prompt(keyfacts, sentences):
         prompt: the final input prompt
     '''
 
-    summary = ['[' + str(line_num + 1) + '] ' + sentence for line_num, sentence in enumerate(sentences)]
-    summary = '\n'.join(summary)
+    summary = [
+        '[' 
+        + str(line_num + 1) 
+        + '] ' 
+        + sentence 
+        for line_num, sentence in enumerate(sentences)
+    ]
+    
+    summary = '\n'.join(summary)  # list에 담긴 "[LineNumber] Summary Sentence" 형태 str들을 개행문자 이용해 단일 str으로 병합
     num_key_facts = str(len(keyfacts))
-    key_facts = '\n'.join(keyfacts)
+    key_facts = '\n'.join(keyfacts)  # list에 담긴 keyfact str들을 개행문자 이용해 단일 str으로 병합
     
     prompt = \
 '''
@@ -188,7 +205,7 @@ Summary:
     return prompt
 
 
-def parsing_llm_keyfact_alighment_output(output):
+def parsing_llm_keyfact_alighment_output(output: str):
 
     ''' A function to parse the output from LLMs based on heuristic rules
     Args:
@@ -199,31 +216,32 @@ def parsing_llm_keyfact_alighment_output(output):
     '''
         
     try:
+        # LLM이 KeyFact<->SummarySentences 간의 Alignment를 판단한 출력물을 파싱
+        # LLM은 [{"key fact": "first key fact", "response": "yes" 또는 "no", "line number": [1, 5, ...]}, ...] 형태로 출력을 유도받음
         output = output.replace('```', '')
         start_idx = output.find('[')
         output = output[start_idx:]
-        output = ast.literal_eval(output)
+        output = ast.literal_eval(output)  # str -> python list object 변환
 
-        matched_lines = set()
-        pred_labels = []
+        pred_labels = []  # 각 KeyFact별로 요약문장과의 매치 성공 여부를 binary로 저장
+        matched_lines = set()  # KeyFact와의 매치가 하나라도 존재하는 모든 요약문장 넘버들의 집합
 
-        for out in output:
-            category = out["response"]
-
-            if category.lower() == "yes":
-                pred_labels.append(1)
-            else:
-                pred_labels.append(0)
+        for out in output:  # 각 KeyFact에 대한 (요약 문장들과의) Alignment 여부를 담고 있는 dict 별로 iterate
+            category = out["response"]  # KeyFact Alignment 여부
+            if category.lower() == "yes":  # 특정 요약 문장(들)과 Align 되는 KeyFact로 판단된 경우
+                pred_labels.append(1)  # 해당 KeyFact에 대한 pred_label은 match에 해당하는 1로
+            else:  # 어떠한 요약 문장(들)과도 Align 되지 않는 KeyFact로 판단된 경우
+                pred_labels.append(0)  # 해당 KeyFact에 대한 pred_label은 no-match에 해당하는 0으로
             
             if 'line number' in out:
-                line_nums = out["line number"]
+                line_nums = out["line number"]  # 해당 KeyFact와 Align되는 요약문장들의 번호 담은 리스트
 
                 for line_num in line_nums:
                     if type(line_num) is str:
-                        line_num = line_num.replace('[', '').replace(']', '')
+                        line_num = line_num.replace('[', '').replace(']', '')  # [1,2,3,...] 형태로 출력되도록 유도했으므로 파싱
                     matched_lines.add(int(line_num))
         
-        return pred_labels, list(matched_lines)
+        return pred_labels, list(matched_lines)  # 각 KeyFact들 별로 특정 요약문장(들)과의 Align여부를 담은 바이너리 리스트, 특정 KeyFact(들)과 Align 일어난 문장번호 전체를 담은 리스트
     
     except Exception as e:
         print(e)
@@ -244,4 +262,3 @@ def compute_completeness_percentage_score(pred_alignment_labels):
 def compute_conciseness_percentage_score(pred_sentence_line_numbers, num_sentences):
     conciseness = len(pred_sentence_line_numbers) / num_sentences
     return conciseness
-
