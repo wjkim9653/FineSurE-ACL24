@@ -1,30 +1,33 @@
-import json
+import os
 import sys
+import json
 import numpy as np
 from utils import compute_faithfulness_percentage_score, compute_completeness_percentage_score
 from scipy.stats import pearsonr, spearmanr
 import scipy.stats as ss
+import logging
+logging.basicConfig(level=logging.WARNING)
 
-def main(frank_result_path, realsumm_result_path):
+def main(frank_result_path, realsumm_result_path, model, keyfact):
+    with open(os.path.join('reproduce/logs/',f'{model}-{keyfact}.txt'), 'w') as logfile:
+        # 1. load frank data
+        frank_results = []
+        for line in open(frank_result_path, 'r'):
+            line = json.loads(line)
+            frank_results.append(line)
 
-    # 1. load frank data
-    frank_results = []
-    for line in open(frank_result_path, 'r'):
-        line = json.loads(line)
-        frank_results.append(line)
+        faithfulness_eval(frank_results, logfile)
 
-    faithfulness_eval(frank_results)
-
-    # load realsumm data
-    realsumm_results = []
-    for line in open(realsumm_result_path, 'r'):
-        line = json.loads(line)
-        realsumm_results.append(line)
-        
-    completeness_and_conciseness_eval(realsumm_results)
+        # load realsumm data
+        realsumm_results = []
+        for line in open(realsumm_result_path, 'r'):
+            line = json.loads(line)
+            realsumm_results.append(line)
+            
+        completeness_and_conciseness_eval(realsumm_results, logfile)
 
 
-def faithfulness_eval(results: list):
+def faithfulness_eval(results: list, logfile):
     '''
     A function to evaluate the results from FineSurE on faithfulness at the three different levels
     '''
@@ -102,29 +105,39 @@ def faithfulness_eval(results: list):
         model_wise_results[model]['gt_faithfulness_scores'].append(gt_faithfulness_score)
         model_wise_results[model]['pred_faithfulness_scores'].append(pred_faithfulness_score)
 
-    print('[Faithfulness Evaluation]')
+    logging.info('[Faithfulness Evaluation]')
+    logfile.write('[Faithfulness Evaluation]\n')
 
-    print('* Sentence-level')
+    logging.info('* Sentence-level')
+    logfile.write('* Sentence-level\n')
     bAcc = balancedAcc(full_results['gt_faithfulness_binary_labels'], full_results['pred_faithfulness_binary_labels'])
-    print('\t-Balanced Accuracy:', '{:.1%}'.format(bAcc))
+    logging.info(f'\t-Balanced Accuracy:{bAcc:.1%}')
+    logfile.write(f'\t-Balanced Accuracy:{bAcc:.1%}\n')
 
     pearson_corr = pearsonr(full_results['gt_faithfulness_scores'], full_results['pred_faithfulness_scores'])
     spearman_corr = spearmanr(full_results['gt_faithfulness_scores'], full_results['pred_faithfulness_scores'])
 
-    print('* Summary-level:')
-    print("\t-Pearson:", pearson_corr)
-    print("\t-Spearman:", spearman_corr)
+    logging.info('* Summary-level:')
+    logging.info(f"\t-Pearson: {pearson_corr}")
+    logging.info(f"\t-Spearman: {spearman_corr}")
+    
+    logfile.write('* Summary-level:\n')
+    logfile.write(f"\t-Pearson: {pearson_corr}\n")
+    logfile.write(f"\t-Spearman: {spearman_corr}\n")
 
-    print('* System-level:')
+    logging.info('* System-level:')
+    logfile.write('* System-level:\n')
     # model-wise ranking 
     _rank_correlation = rank_correlation(model_wise_results, key="faithfulness_scores")
-    print("\t-Rank Correlation:", _rank_correlation)
+    logging.info(f"\t-Rank Correlation: {_rank_correlation}")
+    logfile.write(f"\t-Rank Correlation: {_rank_correlation}\n")
 
     success_rate = cnt_success_inference / len(conv_ids)
-    print('* Success ratio', '{:.1%}'.format(success_rate))
+    logging.info(f'* Success ratio {success_rate:.1%}')
+    logfile.write(f'* Success ratio {success_rate:.1%}\n')
 
 
-def completeness_and_conciseness_eval(results):
+def completeness_and_conciseness_eval(results, logfile):
     '''
     A function to evaluate the results from FineSurE on faithfulness at the three different levels
     '''
@@ -210,37 +223,50 @@ def completeness_and_conciseness_eval(results):
         model_wise_results[model]['gt_conciseness_scores'].append(gt_conciseness_score)
         model_wise_results[model]['pred_conciseness_scores'].append(pred_conciseness_score)
 
-    print('\n[Completeness Evaluation]')
+    logging.info('\n[Completeness Evaluation]')
+    logfile.write('\n[Completeness Evaluation]\n')
 
     pearson_corr = pearsonr(full_results['gt_completeness_scores'], full_results['pred_completeness_scores'])
     spearman_corr = spearmanr(full_results['gt_completeness_scores'], full_results['pred_completeness_scores'])
 
-    print('* Summary-level:')
-    print("\t-Pearson:", pearson_corr)
-    print("\t-Spearman:", spearman_corr)
+    logging.info('* Summary-level:')
+    logfile.write('* Summary-level:\n')
+    logging.info(f"\t-Pearson: {pearson_corr}")
+    logfile.write(f"\t-Pearson: {pearson_corr}\n")
+    logging.info(f"\t-Spearman: {spearman_corr}")
+    logfile.write(f"\t-Spearman: {spearman_corr}\n")
 
-    print('* System-level:')
+    logging.info('* System-level:')
+    logfile.write('* System-level:\n')
     # model-wise ranking 
     _rank_correlation = rank_correlation(model_wise_results, key="completeness_scores")
-    print("\t-Rank Correlation:", _rank_correlation)
+    logging.info(f"\t-Rank Correlation: {_rank_correlation}")
+    logfile.write(f"\t-Rank Correlation: {_rank_correlation}\n")
 
-    print('\n[Conciseness Evaluation]')
+    logging.info('\n[Conciseness Evaluation]')
+    logfile.write('\n[Conciseness Evaluation]\n')
 
     pearson_corr = pearsonr(full_results['gt_conciseness_scores'], full_results['pred_conciseness_scores'])
     spearman_corr = spearmanr(full_results['gt_conciseness_scores'], full_results['pred_conciseness_scores'])
 
-    print('* Summary-level:')
-    print("\t-Pearson:", pearson_corr)
-    print("\t-Spearman:", spearman_corr)
+    logging.info('* Summary-level:')
+    logfile.write('* Summary-level:\n')
+    logging.info(f"\t-Pearson: {pearson_corr}")
+    logfile.write(f"\t-Pearson: {pearson_corr}\n")
+    logging.info(f"\t-Spearman: {spearman_corr}")
+    logfile.write(f"\t-Spearman: {spearman_corr}\n")
 
-    print('* System-level:')
+    logging.info('* System-level:')
+    logfile.write('* System-level:\n')
     # model-wise ranking 
     _rank_correlation = rank_correlation(model_wise_results, key="conciseness_scores")
-    print("\t-Rank Correlation:", _rank_correlation)
+    logging.info(f"\t-Rank Correlation: {_rank_correlation}")
+    logfile.write(f"\t-Rank Correlation: {_rank_correlation}\n")
 
 
     success_rate = cnt_success_inference / len(conv_ids)
-    print('\n* Success ratio', '{:.1%}'.format(success_rate))
+    logging.info(f'\n* Success ratio {success_rate:.1%}')
+    logfile.write(f'\n* Success ratio {success_rate:.1%}\n')
   
 
 def get_aggregate_gt_labels(raw_annotations:dict, key:str):
@@ -332,11 +358,11 @@ def rank_correlation(model_wise_results, key, min_number=5):
 
     estimated_rank = ss.rankdata(pred_errors)
     human_rank = ss.rankdata(gt_errors)
-    #print("models:", models)
-    #print('gt ' + key + ':', gt_errors)
-    #print('pred ' + key + ':', pred_errors )
-    #print('gt rank ' + key + ':', human_rank)
-    #print('pred rank ' + key + ':', estimated_rank)
+    #logging.info("models:", models)
+    #logging.info('gt ' + key + ':', gt_errors)
+    #logging.info('pred ' + key + ':', pred_errors )
+    #logging.info('gt rank ' + key + ':', human_rank)
+    #logging.info('pred rank ' + key + ':', estimated_rank)
     spearman_corr = spearmanr(estimated_rank, human_rank)
 
     return spearman_corr
@@ -347,13 +373,58 @@ if __name__ == "__main__":
 
     '''
     Runnining Command:
-        cd CodeRelease/reproduce
-        python reproduce-main-results.py results/frank-result-by-gpt4-w-finesure.json results/realsumm-result-by-gpt4-w-finesure.json
+        (1)
+        cd FineSurE
+        
+        (2) 
+        python reproduce/reproduce-main-results.py \
+            [keyfact json file directory] \
+            [results path]
+        e.g.
+        python reproduce/reproduce-main-results.py \
+            dataset/realsumm/keyfact/ \
+            result/
     '''
 
-    frank_result_path = sys.argv[1]
-    realsumm_result_path = sys.argv[2]
+    keyfact_path = sys.argv[1]
+    if not os.path.isdir(keyfact_path):
+        raise ValueError("KeyFact Path Not Found")
     
-    main(frank_result_path, realsumm_result_path)
+    result_path = sys.argv[2]
+    if not os.path.isdir(result_path):
+        raise ValueError("Result Path Not Found")
+    
+    models = [
+        'gpt-3.5-turbo',
+        'gpt-4-1106-preview',
+        'gpt-4o-2024-05-13',
+        'gpt-4.1-2025-04-14',
+        'gpt-4.1-mini-2025-04-14',
+        'gpt-4.1-nano-2025-04-14',
+        'o3-2025-04-16',
+        'o4-mini-2025-04-16',
+    ]
 
-
+    for model in models:
+        if (
+            os.path.isfile(os.path.join(keyfact_path, 'human-keyfact-list.json'))
+            and
+            os.path.isfile(os.path.join(result_path, 'keyfact-alignment', f'realsumm-raw-data-by-{model}-keyfact-from-human-keyfact-list.json'))
+        ):  # 만약 인간이 제공한 KeyFact 기반으로 수행한 KeyFact-Alignment 결과 파일이 있을 경우
+            main(
+                frank_result_path=os.path.join(result_path, 'fact-checking', f'frank-raw-data-by-{model}.json'), 
+                realsumm_result_path=os.path.join(result_path, 'keyfact-alignment', f'realsumm-raw-data-by-{model}-keyfact-from-human-keyfact-list.json'),
+                model=model,
+                keyfact='human-keyfact-list'
+            )
+        if (
+            os.path.isfile(os.path.join(keyfact_path, f'machine-keyfact-list-from-{model}.json'))
+            and
+            os.path.isfile(os.path.join(result_path, 'keyfact-alignment', f'realsumm-raw-data-by-{model}-keyfact-from-machine-keyfact-list-from-{model}.json'))
+        ):  # 만약 해당 모델로 추출한 KeyFact 기반으로 수행한 KeyFact-Alignment 결과 파일이 있을 경우
+            main(
+                frank_result_path=os.path.join(result_path, 'fact-checking', f'frank-raw-data-by-{model}.json'), 
+                realsumm_result_path=os.path.join(result_path, 'keyfact-alignment', f'realsumm-raw-data-by-{model}-keyfact-from-machine-keyfact-list-from-{model}.json'),
+                model=model,
+                keyfact=f'machine-keyfact-list-from-{model}'
+            )

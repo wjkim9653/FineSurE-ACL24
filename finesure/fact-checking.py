@@ -4,13 +4,13 @@ import sys
 import os
 from utils import get_response, parsing_llm_fact_checking_output, compute_faithfulness_percentage_score
 from utils import get_fact_checking_prompt
+import random
+import concurrent.futures
+from tqdm import tqdm
 from dotenv import load_dotenv
 load_dotenv()
 import logging
 logging.basicConfig(level=logging.WARNING)
-import random
-import concurrent.futures
-from tqdm import tqdm
 
 # api key
 _api_key = os.getenv("OPENAI_API_KEY")
@@ -19,7 +19,6 @@ _client = openai.OpenAI(api_key=_api_key)
 #_model = "gpt-3.5-turbo"
 #_model = "gpt-4-1106-preview"
 _model = "gpt-4o-2024-05-13"  # fallback (in case no `models` list is defined when calling main())
-VERBOSE = eval(os.getenv("VERBOSE", "False"))
 
 def main(input_path, output_path, log_interval=2, model=_model, sample_cnt=100, position=0):
     '''
@@ -30,7 +29,7 @@ def main(input_path, output_path, log_interval=2, model=_model, sample_cnt=100, 
         model: OpenAI API Compatible Models ID to Test
         sample_cnt: # of Samples from realsumm dataset, must be integer, defaults to 100
     '''
-    logging.info(f"🤖 Running Fact-Checking with Model: {model}")
+    logging.info(f"✅ Running Fact-Checking with 🤖: {model}")
 
     # loads data for faithfulness evaluation using FineSurE
     inputs = []
@@ -148,7 +147,11 @@ if __name__ == "__main__":
     Runnining Command:
         1) cd FineSurE-ACL24
         2) python finesure/fact-checking.py [input-path] [output-folder] [# of samples to run]
-        e.g., python finesure/fact-checking.py dataset/frank/frank-data.json result/fact-checking 10
+        e.g., 
+        python finesure/fact-checking.py \
+            dataset/frank/frank-data.json \
+            result/fact-checking \
+            100
     '''
 
     input_path = sys.argv[1]
