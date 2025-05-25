@@ -1,23 +1,25 @@
 [Faithfulness Evaluation]
 * Sentence-level
-	-Balanced Accuracy:100.0%
+	-Balanced Accuracy:86.6%
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=1.0, pvalue=0.0)
-	-Spearman: SignificanceResult(statistic=1.0, pvalue=0.0)
+	-Pearson: PearsonRResult(statistic=0.8407925474435897, pvalue=2.4982829250518225e-27)
+	-Spearman: SignificanceResult(statistic=0.8484069935278226, pvalue=2.8724034509112186e-28)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
-* Success ratio 100.0%
+	-Rank Correlation: SignificanceResult(statistic=0.8448275862068966, pvalue=0.0041493871422215774)
+* Success ratio 98.0%
 
 [Completeness Evaluation]
 * Summary-level:
-Failed to Calculate Pearson Corr. : `x` and `y` must have length at least 2.	-Spearman: SignificanceResult(statistic=nan, pvalue=nan)
+	-Pearson: PearsonRResult(statistic=-0.05559847217497668, pvalue=0.9292463145100983)
+	-Spearman: SignificanceResult(statistic=-0.35355339059327373, pvalue=0.5594043441634877)
 * System-level:
 	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
 
 [Conciseness Evaluation]
 * Summary-level:
-Failed to Calculate Pearson Corr. : `x` and `y` must have length at least 2.	-Spearman: SignificanceResult(statistic=nan, pvalue=nan)
+	-Pearson: PearsonRResult(statistic=-0.33752637027780713, pvalue=0.578553374744848)
+	-Spearman: SignificanceResult(statistic=-0.35355339059327373, pvalue=0.5594043441634877)
 * System-level:
 	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
 
-* Success ratio 0.0%
+* Success ratio 5.0%

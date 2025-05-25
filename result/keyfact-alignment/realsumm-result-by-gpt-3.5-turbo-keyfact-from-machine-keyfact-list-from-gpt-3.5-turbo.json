@@ -4,23 +4,63 @@
 [Evaluation Results]
 
 * completeness score per model (higher is better)
-banditsumm_out	80.0%
-presumm_out_trans_abs	25.0%
-t5_out_large	100.0%
-pnbert_out_bert_tf_pn	77.8%
+banditsumm_out	72.6%
+fast_abs_rl_out_rerank	60.2%
+neusumm_out	49.7%
+bottom_up_out	70.4%
+bart_out_ext	71.2%
+ptr_generator_out_pointer_gen_cov	83.3%
+heter_graph_out	50.0%
+pnbert_out_bert_lstm_pn	46.0%
+presumm_out_ext_abs	57.1%
+matchsumm_out	62.2%
+pnbert_out_bert_lstm_pn_rl	59.2%
+t5_out_11B	100.0%
+pnbert_out_bert_tf_pn	57.1%
+refresh_out	75.9%
+t5_out_base	66.7%
+pnbert_out_bert_tf_sl	66.7%
+bart_out_abs	61.9%
+presumm_out_trans_abs	79.0%
+pnbert_out_lstm_pn_rl	65.3%
+t5_out_large	75.0%
+presumm_out_abs	75.0%
+unilm_out_v1	57.1%
+semsim_out	43.8%
+two_stage_rl_out	100.0%
 
 * completeness model ranking (left is better)
-['t5_out_large', 'banditsumm_out', 'pnbert_out_bert_tf_pn', 'presumm_out_trans_abs']
+['t5_out_11B', 'two_stage_rl_out', 'ptr_generator_out_pointer_gen_cov', 'presumm_out_trans_abs', 'refresh_out', 't5_out_large', 'presumm_out_abs', 'banditsumm_out', 'bart_out_ext', 'bottom_up_out', 't5_out_base', 'pnbert_out_bert_tf_sl', 'pnbert_out_lstm_pn_rl', 'matchsumm_out', 'bart_out_abs', 'fast_abs_rl_out_rerank', 'pnbert_out_bert_lstm_pn_rl', 'presumm_out_ext_abs', 'pnbert_out_bert_tf_pn', 'unilm_out_v1', 'heter_graph_out', 'neusumm_out', 'pnbert_out_bert_lstm_pn', 'semsim_out']
 
 * conciseness score per model (higher is better)
-banditsumm_out	100.0%
-presumm_out_trans_abs	25.0%
+banditsumm_out	66.7%
+fast_abs_rl_out_rerank	82.2%
+neusumm_out	100.0%
+bottom_up_out	77.8%
+bart_out_ext	90.0%
+ptr_generator_out_pointer_gen_cov	100.0%
+heter_graph_out	66.7%
+pnbert_out_bert_lstm_pn	66.7%
+presumm_out_ext_abs	50.0%
+matchsumm_out	100.0%
+pnbert_out_bert_lstm_pn_rl	80.0%
+t5_out_11B	100.0%
+pnbert_out_bert_tf_pn	79.2%
+refresh_out	83.3%
+t5_out_base	91.7%
+pnbert_out_bert_tf_sl	66.7%
+bart_out_abs	58.3%
+presumm_out_trans_abs	83.3%
+pnbert_out_lstm_pn_rl	83.3%
 t5_out_large	100.0%
-pnbert_out_bert_tf_pn	100.0%
+presumm_out_abs	100.0%
+unilm_out_v1	50.0%
+semsim_out	100.0%
+two_stage_rl_out	100.0%
 
 * conciseness model ranking (left is better)
-['banditsumm_out', 't5_out_large', 'pnbert_out_bert_tf_pn', 'presumm_out_trans_abs']
+['neusumm_out', 'ptr_generator_out_pointer_gen_cov', 'matchsumm_out', 't5_out_11B', 't5_out_large', 'presumm_out_abs', 'semsim_out', 'two_stage_rl_out', 't5_out_base', 'bart_out_ext', 'refresh_out', 'presumm_out_trans_abs', 'pnbert_out_lstm_pn_rl', 'fast_abs_rl_out_rerank', 'pnbert_out_bert_lstm_pn_rl', 'pnbert_out_bert_tf_pn', 'bottom_up_out', 'banditsumm_out', 'heter_graph_out', 'pnbert_out_bert_lstm_pn', 'pnbert_out_bert_tf_sl', 'bart_out_abs', 'presumm_out_ext_abs', 'unilm_out_v1']
 
-* success rate: 40.0%
+* success rate: 51.0%
 
 

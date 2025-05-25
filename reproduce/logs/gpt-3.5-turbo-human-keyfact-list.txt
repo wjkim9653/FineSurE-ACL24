@@ -1,25 +1,25 @@
 [Faithfulness Evaluation]
 * Sentence-level
-	-Balanced Accuracy:71.4%
+	-Balanced Accuracy:67.7%
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=0.7542032576813632, pvalue=0.011724429737114267)
-	-Spearman: SignificanceResult(statistic=0.7590333900710814, pvalue=0.01089871741875533)
+	-Pearson: PearsonRResult(statistic=0.5988715964457784, pvalue=1.820056923496668e-10)
+	-Spearman: SignificanceResult(statistic=0.687956349760075, pvalue=1.8570598745336833e-14)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
-* Success ratio 100.0%
+	-Rank Correlation: SignificanceResult(statistic=0.9362465057662689, pvalue=0.0002023347062748425)
+* Success ratio 94.0%
 
 [Completeness Evaluation]
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=0.733884877645067, pvalue=0.038211046917179164)
-	-Spearman: SignificanceResult(statistic=0.4191691916696406, pvalue=0.30126663266334436)
+	-Pearson: PearsonRResult(statistic=0.6634032431665311, pvalue=3.8939731833095795e-10)
+	-Spearman: SignificanceResult(statistic=0.6214761041344872, pvalue=9.406488151833665e-09)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
+	-Rank Correlation: SignificanceResult(statistic=0.6, pvalue=0.20799999999999982)
 
 [Conciseness Evaluation]
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=0.7941177955742456, pvalue=0.01858697629268284)
-	-Spearman: SignificanceResult(statistic=0.6762713102400015, pvalue=0.06555715552767775)
+	-Pearson: PearsonRResult(statistic=0.45896411108781016, pvalue=6.437398526241118e-05)
+	-Spearman: SignificanceResult(statistic=0.3820254084484642, pvalue=0.0011007198426760735)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=nan, pvalue=nan)
+	-Rank Correlation: SignificanceResult(statistic=0.942857142857143, pvalue=0.004804664723032055)
 
-* Success ratio 100.0%
+* Success ratio 98.6%
