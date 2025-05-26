@@ -10,8 +10,10 @@ from utils import get_keyfact_alighment_prompt, parsing_llm_keyfact_alighment_ou
 from utils import compute_completeness_percentage_score, compute_conciseness_percentage_score
 from utils import get_keyfact_extraction_prompt, keyfact_extraction
 from dotenv import load_dotenv
-load_dotenv()
 import logging
+
+load_dotenv()
+random.seed(42)
 logging.basicConfig(level=logging.WARNING)
 
 # api key
@@ -46,10 +48,10 @@ def main(input_path, keyfact_path, output_path, log_interval=2, model='gpt-4o-20
             pass
         logging.info(f"Created a New Machine-KeyFact-Extraction-Json File: {keyfact_path}")
 
-    # json에 저장되어 있는 KeyFact 추출 결과가 완전하지 않은 경우 대응 (sampled_inputs의 docid 중 keyfact_path 파일에 누락된 경우 캐치해 api call & write)
-    with open(keyfact_path, 'r') as f:
-        existing_keyfact = [json.loads(line) for line in f]
+    # json에 저장되어 있는 KeyFact 추출 결과가 완전하지 않은 경우 대응 (sampled_inputs의 doc_id 중 keyfact_path 파일에 누락된 경우 캐치해 api call & write)
     for sample_input in sampled_inputs:
+        with open(keyfact_path, 'r') as f:
+            existing_keyfact = [json.loads(line) for line in f]
         found = any(entry.get('doc_id')==sample_input['doc_id'] for entry in existing_keyfact)
         if not found:  # Machine Key Fact 추출이 누락된 경우
             logging.info(f"Found missing Machine-KeyFact for doc_id: {sample_input['doc_id']} | Calling OpenAI API")
@@ -238,7 +240,7 @@ if __name__ == "__main__":
     
     # 각 모델별로 병렬 실행하기 위한 run_per_model_keyfact() arguments
     MODEL_POSITION_MAP = {
-        f'{model} & {keyfact}': i+1 
+        f'{model}-{keyfact}': i+1 
         for i, (model, keyfact) in enumerate(models_keyfacts_config.items())
     }
     args_list = [

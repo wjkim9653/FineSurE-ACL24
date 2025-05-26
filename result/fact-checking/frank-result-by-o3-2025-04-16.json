@@ -3,29 +3,29 @@
 
 [Evaluation Results]
 * sentence-level factuality error ratio per model (lower is better)
-bart	3.6%
-bus	33.3%
-BERTS2S	85.7%
-pgn	6.1%
-PtGen	86.7%
-bert_sum	8.3%
-TConvS2S	100.0%
-TranS2S	100.0%
-s2s	58.6%
+PtGen	91.7%
+pgn	15.8%
+BERTS2S	96.4%
+TConvS2S	87.5%
+bus	17.0%
+bert_sum	5.8%
+s2s	41.8%
+bart	6.8%
+TranS2S	90.5%
 
 * summary-level faithfulness score per model (higher is better)
-bart	96.9%
-bus	66.2%
-BERTS2S	14.3%
-pgn	93.9%
-PtGen	10.7%
-bert_sum	92.9%
-TConvS2S	0.0%
-TranS2S	0.0%
-s2s	40.2%
+PtGen	9.1%
+pgn	86.2%
+BERTS2S	1.9%
+TConvS2S	12.5%
+bus	83.9%
+bert_sum	94.5%
+s2s	55.2%
+bart	94.3%
+TranS2S	9.5%
 
 * system-level model ranking (left is better)
-['bart', 'pgn', 'bert_sum', 'bus', 's2s', 'BERTS2S', 'PtGen', 'TConvS2S', 'TranS2S']
+['bert_sum', 'bart', 'pgn', 'bus', 's2s', 'TConvS2S', 'TranS2S', 'PtGen', 'BERTS2S']
 
 * success rate: 100.0%
 

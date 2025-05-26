@@ -4,63 +4,65 @@
 [Evaluation Results]
 
 * completeness score per model (higher is better)
-banditsumm_out	72.6%
-fast_abs_rl_out_rerank	60.2%
-neusumm_out	49.7%
-bottom_up_out	70.4%
-bart_out_ext	71.2%
-ptr_generator_out_pointer_gen_cov	83.3%
-heter_graph_out	50.0%
-pnbert_out_bert_lstm_pn	46.0%
-presumm_out_ext_abs	57.1%
-matchsumm_out	62.2%
-pnbert_out_bert_lstm_pn_rl	59.2%
-t5_out_11B	100.0%
-pnbert_out_bert_tf_pn	57.1%
-refresh_out	75.9%
-t5_out_base	66.7%
-pnbert_out_bert_tf_sl	66.7%
-bart_out_abs	61.9%
-presumm_out_trans_abs	79.0%
-pnbert_out_lstm_pn_rl	65.3%
-t5_out_large	75.0%
-presumm_out_abs	75.0%
-unilm_out_v1	57.1%
-semsim_out	43.8%
-two_stage_rl_out	100.0%
+pnbert_out_lstm_pn_rl	69.8%
+presumm_out_abs	54.7%
+banditsumm_out	62.8%
+neusumm_out	45.8%
+bart_out_abs	55.8%
+two_stage_rl_out	31.9%
+presumm_out_trans_abs	59.3%
+fast_abs_rl_out_rerank	44.3%
+heter_graph_out	52.5%
+t5_out_base	52.5%
+bart_out_ext	80.8%
+presumm_out_ext_abs	56.6%
+t5_out_11B	69.8%
+pnbert_out_bert_tf_pn	66.3%
+refresh_out	67.1%
+unilm_out_v1	49.3%
+pnbert_out_bert_lstm_pn	73.5%
+unilm_out_v2	59.3%
+pnbert_out_bert_tf_sl	67.4%
+pnbert_out_bert_lstm_pn_rl	63.9%
+bottom_up_out	52.1%
+semsim_out	58.3%
+t5_out_large	56.8%
+matchsumm_out	100.0%
+ptr_generator_out_pointer_gen_cov	32.5%
 
 * completeness model ranking (left is better)
-['t5_out_11B', 'two_stage_rl_out', 'ptr_generator_out_pointer_gen_cov', 'presumm_out_trans_abs', 'refresh_out', 't5_out_large', 'presumm_out_abs', 'banditsumm_out', 'bart_out_ext', 'bottom_up_out', 't5_out_base', 'pnbert_out_bert_tf_sl', 'pnbert_out_lstm_pn_rl', 'matchsumm_out', 'bart_out_abs', 'fast_abs_rl_out_rerank', 'pnbert_out_bert_lstm_pn_rl', 'presumm_out_ext_abs', 'pnbert_out_bert_tf_pn', 'unilm_out_v1', 'heter_graph_out', 'neusumm_out', 'pnbert_out_bert_lstm_pn', 'semsim_out']
+['matchsumm_out', 'bart_out_ext', 'pnbert_out_bert_lstm_pn', 't5_out_11B', 'pnbert_out_lstm_pn_rl', 'pnbert_out_bert_tf_sl', 'refresh_out', 'pnbert_out_bert_tf_pn', 'pnbert_out_bert_lstm_pn_rl', 'banditsumm_out', 'unilm_out_v2', 'presumm_out_trans_abs', 'semsim_out', 't5_out_large', 'presumm_out_ext_abs', 'bart_out_abs', 'presumm_out_abs', 't5_out_base', 'heter_graph_out', 'bottom_up_out', 'unilm_out_v1', 'neusumm_out', 'fast_abs_rl_out_rerank', 'ptr_generator_out_pointer_gen_cov', 'two_stage_rl_out']
 
 * conciseness score per model (higher is better)
-banditsumm_out	66.7%
-fast_abs_rl_out_rerank	82.2%
-neusumm_out	100.0%
-bottom_up_out	77.8%
-bart_out_ext	90.0%
-ptr_generator_out_pointer_gen_cov	100.0%
-heter_graph_out	66.7%
-pnbert_out_bert_lstm_pn	66.7%
-presumm_out_ext_abs	50.0%
-matchsumm_out	100.0%
-pnbert_out_bert_lstm_pn_rl	80.0%
-t5_out_11B	100.0%
-pnbert_out_bert_tf_pn	79.2%
-refresh_out	83.3%
-t5_out_base	91.7%
-pnbert_out_bert_tf_sl	66.7%
-bart_out_abs	58.3%
-presumm_out_trans_abs	83.3%
-pnbert_out_lstm_pn_rl	83.3%
-t5_out_large	100.0%
-presumm_out_abs	100.0%
+pnbert_out_lstm_pn_rl	94.4%
+presumm_out_abs	65.7%
+banditsumm_out	88.9%
+neusumm_out	66.7%
+bart_out_abs	72.5%
+two_stage_rl_out	61.1%
+presumm_out_trans_abs	68.1%
+fast_abs_rl_out_rerank	60.0%
+heter_graph_out	78.3%
+t5_out_base	81.3%
+bart_out_ext	83.0%
+presumm_out_ext_abs	67.4%
+t5_out_11B	91.7%
+pnbert_out_bert_tf_pn	75.0%
+refresh_out	77.3%
 unilm_out_v1	50.0%
-semsim_out	100.0%
-two_stage_rl_out	100.0%
+pnbert_out_bert_lstm_pn	88.9%
+unilm_out_v2	72.2%
+pnbert_out_bert_tf_sl	95.0%
+pnbert_out_bert_lstm_pn_rl	75.0%
+bottom_up_out	66.7%
+semsim_out	62.4%
+t5_out_large	82.1%
+matchsumm_out	100.0%
+ptr_generator_out_pointer_gen_cov	33.3%
 
 * conciseness model ranking (left is better)
-['neusumm_out', 'ptr_generator_out_pointer_gen_cov', 'matchsumm_out', 't5_out_11B', 't5_out_large', 'presumm_out_abs', 'semsim_out', 'two_stage_rl_out', 't5_out_base', 'bart_out_ext', 'refresh_out', 'presumm_out_trans_abs', 'pnbert_out_lstm_pn_rl', 'fast_abs_rl_out_rerank', 'pnbert_out_bert_lstm_pn_rl', 'pnbert_out_bert_tf_pn', 'bottom_up_out', 'banditsumm_out', 'heter_graph_out', 'pnbert_out_bert_lstm_pn', 'pnbert_out_bert_tf_sl', 'bart_out_abs', 'presumm_out_ext_abs', 'unilm_out_v1']
+['matchsumm_out', 'pnbert_out_bert_tf_sl', 'pnbert_out_lstm_pn_rl', 't5_out_11B', 'banditsumm_out', 'pnbert_out_bert_lstm_pn', 'bart_out_ext', 't5_out_large', 't5_out_base', 'heter_graph_out', 'refresh_out', 'pnbert_out_bert_tf_pn', 'pnbert_out_bert_lstm_pn_rl', 'bart_out_abs', 'unilm_out_v2', 'presumm_out_trans_abs', 'presumm_out_ext_abs', 'neusumm_out', 'bottom_up_out', 'presumm_out_abs', 'semsim_out', 'two_stage_rl_out', 'fast_abs_rl_out_rerank', 'unilm_out_v1', 'ptr_generator_out_pointer_gen_cov']
 
-* success rate: 51.0%
+* success rate: 67.0%
 
 

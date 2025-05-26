@@ -4,12 +4,14 @@ import sys
 import os
 from utils import get_response, parsing_llm_fact_checking_output, compute_faithfulness_percentage_score
 from utils import get_fact_checking_prompt
-import random
 import concurrent.futures
 from tqdm import tqdm
 from dotenv import load_dotenv
-load_dotenv()
+import random
 import logging
+
+load_dotenv()
+random.seed(42)
 logging.basicConfig(level=logging.WARNING)
 
 # api key
