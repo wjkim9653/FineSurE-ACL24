@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+from pprint import pprint
 import numpy as np
 from utils import compute_faithfulness_percentage_score, compute_completeness_percentage_score
 from scipy.stats import pearsonr, spearmanr
@@ -213,11 +214,12 @@ def completeness_and_conciseness_eval(results, logfile):
             else:
                 _pred_sentence_line_numbers.append(0.0)
         pred_sentence_line_numbers = _pred_sentence_line_numbers
-
       
         assert len(gt_sentence_line_numbers) == len(pred_sentence_line_numbers)
         gt_conciseness_score = sum(gt_sentence_line_numbers) / len(gt_sentence_line_numbers)
         pred_conciseness_score = sum(pred_sentence_line_numbers) / len(pred_sentence_line_numbers)
+        # print(f'gt_conciseness_score: {gt_conciseness_score}')
+        # print(f'pred_conciseness_score: {pred_conciseness_score}')
 
         full_results['gt_completeness_scores'].append(gt_completeness_score)
         full_results['pred_completeness_scores'].append(pred_completeness_score)
@@ -229,6 +231,7 @@ def completeness_and_conciseness_eval(results, logfile):
         model_wise_results[model]['gt_conciseness_scores'].append(gt_conciseness_score)
         model_wise_results[model]['pred_conciseness_scores'].append(pred_conciseness_score)
 
+    # pprint(full_results)
     logging.info('\n[Completeness Evaluation]')
     logfile.write('\n[Completeness Evaluation]\n')
 
@@ -250,6 +253,8 @@ def completeness_and_conciseness_eval(results, logfile):
         logfile.write(f'Failed to Calculate Spearman Corr. : {e}')
 
 
+    # print(f'logfile: {logfile}')
+    # pprint(model_wise_results)
     logging.info('* System-level:')
     logfile.write('* System-level:\n')
     # model-wise ranking 
@@ -360,7 +365,7 @@ def balancedAcc(gt, pred):
     return (error_acc + non_error_acc) / 2.0
 
 
-def rank_correlation(model_wise_results, key, min_number=5):
+def rank_correlation(model_wise_results, key, min_number=0):
     '''
     A function to compute the balanced accuracy
     Args:
@@ -373,22 +378,23 @@ def rank_correlation(model_wise_results, key, min_number=5):
 
     model_list =  model_wise_results.keys()
 
+    # 각 요약모델 별
     models = []
-    
-    # 각 요약모델 별로 인간평가자 및 LLM Judge가 부여한 평균 
+    # (각 요약모델 별) 인간평가자 및 LLM Judge가 부여한 평균 스코어들 차례대로
     gt_errors = []
     pred_errors = []
     
     for model_name in model_list:
         models.append(model_name)
-        gt_error, pred_error = np.mean(model_wise_results[model_name]['gt_' + key]), np.mean(model_wise_results[model_name]['pred_' + key])
+        gt_error, pred_error = np.mean(model_wise_results[model_name]['gt_' + key] if len(model_wise_results[model_name]['gt_' + key]) > 0 else 0), np.mean(model_wise_results[model_name]['pred_' + key] if len(model_wise_results[model_name]['pred_' + key]) > 0 else 0)  # Human GT, LLM Pred 각각의 평균값 사용
+        # ⚠️ Empty List yielding mean() calculation failure and nan value -> temporarily avoided by giving 0 value when empty.
 
         if len(model_wise_results[model_name]['gt_' + key]) >= min_number:
             gt_errors.append(gt_error)
             pred_errors.append(pred_error)
 
-    pred_errors = np.array(pred_errors)
     gt_errors = np.array(gt_errors)
+    pred_errors = np.array(pred_errors)
 
     estimated_rank = ss.rankdata(pred_errors)
     human_rank = ss.rankdata(gt_errors)

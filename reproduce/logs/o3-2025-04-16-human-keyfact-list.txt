@@ -13,13 +13,13 @@
 	-Pearson: PearsonRResult(statistic=0.7845743994923238, pvalue=5.694350776596727e-43)
 	-Spearman: SignificanceResult(statistic=0.7673115626503165, pvalue=4.584456059858832e-40)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=0.7368718238283457, pvalue=9.174588774353496e-05)
+	-Rank Correlation: SignificanceResult(statistic=0.7961538461538461, pvalue=1.9397153952556204e-06)
 
 [Conciseness Evaluation]
 * Summary-level:
 	-Pearson: PearsonRResult(statistic=0.506554582449882, pvalue=1.965747227412643e-14)
 	-Spearman: SignificanceResult(statistic=0.48682490188843214, pvalue=2.6851499749391845e-13)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=0.33154329774406405, pvalue=0.13173090440486762)
+	-Rank Correlation: SignificanceResult(statistic=0.46862974988086464, pvalue=0.01813379716770361)
 
 * Success ratio 100.0%

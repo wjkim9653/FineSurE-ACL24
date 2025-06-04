@@ -25,13 +25,13 @@ python finesure/keyfact-alignment.py \
 
 # LLM-Judge가 동적으로 KeyFact List 추출까지 진행
     # ⚠️ -> KeyFact 추출, LLM-as-a-Judge의 평가까지는 정상동작하나, 인간작성 GT Annotation은 human-keyfact-list.json 기반이므로 
-    # ⚠️ Pearson/Spearman/Rank Correlation 계산에서 에러 발생하며 이상한 수치 계산되어 나옴
-# echo "Running KeyFact Alignment (Machine-Extracted KeyFacts)..."
-# python finesure/keyfact-alignment.py \
-#     dataset/realsumm/realsumm-data.json \
-#     dataset/realsumm/keyfact/ \
-#     result/keyfact-alignment \
-#     $SAMPLE_COUNT
+    # ⚠️ Pearson/Spearman/Rank Correlation 계산에서 비정상적 수치 계산되므로 신뢰하기 어려움
+echo "Running KeyFact Alignment (Machine-Extracted KeyFacts)..."
+python finesure/keyfact-alignment.py \
+    dataset/realsumm/realsumm-data.json \
+    dataset/realsumm/keyfact/ \
+    result/keyfact-alignment \
+    $SAMPLE_COUNT
 
 
 # 논문에 있던 테이블 수치 재구현 (Human Annotator Ground-Truth vs LLM-as-a-Judge Predictions)
