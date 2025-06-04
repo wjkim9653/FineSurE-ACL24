@@ -185,13 +185,20 @@ def completeness_and_conciseness_eval(results, logfile):
         # LLM Evaluator가 각 Summary Sentence별 대응 KeyFact 존재여부 판별한 결과 -> Conciseness 계산에 필요
         pred_sentence_line_numbers = result['pred_sentence_line_numbers']
 
+        '''  # ⚠️ KeyFact List를 Element-wise로 비교하고 있지 않고 평균 스코어로만 비교하고 있는데 굳이 둘의 길이가 같도록 강제할 이유가 있나??????
         # failure cases
         if len(gt_alignment_labels) != len(pred_alignment_labels): # 동일한, 사전작성된 KeyFact List 기반으로 수행한 결과를 예상하고 있으므로 길이 다르면 실패한 케이스로 해석
             continue
+        '''
         _gt_alignment_labels, _pred_alignment_labels = [], []
         for idx, item in enumerate(gt_alignment_labels):
             if item != 'None':
                 _gt_alignment_labels.append(gt_alignment_labels[idx])
+                '''_pred_alignment_labels.append(pred_alignment_labels[idx])'''  # ⚠️ 이 부분 때문에 두 리스트 간 길이를 강제로 맞추고 있었던 것 같음...! 굳이 이렇게 할 필요 없을 것 같다.
+        
+        # 이 for loop 추가해서 KeyFact List 길이 다른 경우에 대응하도록 코드 수정함
+        for idx, item in enumerate(pred_alignment_labels):
+            if item != 'None':
                 _pred_alignment_labels.append(pred_alignment_labels[idx])
         gt_alignment_labels, pred_alignment_labels = np.array(_gt_alignment_labels), np.array(_pred_alignment_labels)
 
@@ -215,7 +222,7 @@ def completeness_and_conciseness_eval(results, logfile):
                 _pred_sentence_line_numbers.append(0.0)
         pred_sentence_line_numbers = _pred_sentence_line_numbers
       
-        assert len(gt_sentence_line_numbers) == len(pred_sentence_line_numbers)
+        '''assert len(gt_sentence_line_numbers) == len(pred_sentence_line_numbers)'''
         gt_conciseness_score = sum(gt_sentence_line_numbers) / len(gt_sentence_line_numbers)
         pred_conciseness_score = sum(pred_sentence_line_numbers) / len(pred_sentence_line_numbers)
         # print(f'gt_conciseness_score: {gt_conciseness_score}')

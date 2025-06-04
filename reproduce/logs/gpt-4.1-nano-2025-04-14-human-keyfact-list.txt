@@ -10,16 +10,16 @@
 
 [Completeness Evaluation]
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=0.661899938293012, pvalue=3.3394674767258333e-26)
-	-Spearman: SignificanceResult(statistic=0.6572916264616754, pvalue=9.600902294244683e-26)
+	-Pearson: PearsonRResult(statistic=0.6573470045991755, pvalue=4.027036319457542e-26)
+	-Spearman: SignificanceResult(statistic=0.6539670305359394, pvalue=8.738408305746311e-26)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=0.5423076923076924, pvalue=0.005101122263604567)
+	-Rank Correlation: SignificanceResult(statistic=0.6130769230769231, pvalue=0.001119908561673059)
 
 [Conciseness Evaluation]
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=0.38262961806363815, pvalue=2.8747297965472044e-08)
-	-Spearman: SignificanceResult(statistic=0.3097917071338008, pvalue=9.426171809589277e-06)
+	-Pearson: PearsonRResult(statistic=0.38038342980109807, pvalue=2.7604514768110727e-08)
+	-Spearman: SignificanceResult(statistic=0.30568520332694116, pvalue=1.0737126484569355e-05)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=0.15316529050143032, pvalue=0.46481033025159246)
+	-Rank Correlation: SignificanceResult(statistic=0.22801616739220468, pvalue=0.27297664762967766)
 
-* Success ratio 98.5%
+* Success ratio 100.0%

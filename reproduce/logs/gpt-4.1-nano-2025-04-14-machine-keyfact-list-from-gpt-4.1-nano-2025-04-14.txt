@@ -10,16 +10,16 @@
 
 [Completeness Evaluation]
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=0.2556717068935865, pvalue=0.4758657269583593)
-	-Spearman: SignificanceResult(statistic=0.3385596572384754, pvalue=0.3386113704781221)
+	-Pearson: PearsonRResult(statistic=-0.13207134701206025, pvalue=0.06228826189532492)
+	-Spearman: SignificanceResult(statistic=-0.16909529964587722, pvalue=0.016682018278381894)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=0.8877745978645013, pvalue=3.2581364767107764e-09)
+	-Rank Correlation: SignificanceResult(statistic=0.21538461538461537, pvalue=0.30114175791935816)
 
 [Conciseness Evaluation]
 * Summary-level:
-	-Pearson: PearsonRResult(statistic=0.6148225885217832, pvalue=0.058538759003418706)
-	-Spearman: SignificanceResult(statistic=0.5791075550927999, pvalue=0.07938245115338391)
+	-Pearson: PearsonRResult(statistic=0.07610711067136747, pvalue=0.2841132241048804)
+	-Spearman: SignificanceResult(statistic=0.062354607733669534, pvalue=0.38040304368162015)
 * System-level:
-	-Rank Correlation: SignificanceResult(statistic=0.9313695195904661, pvalue=1.419104239131234e-11)
+	-Rank Correlation: SignificanceResult(statistic=0.14913295904997118, pvalue=0.4767845978242796)
 
-* Success ratio 5.0%
+* Success ratio 100.0%
