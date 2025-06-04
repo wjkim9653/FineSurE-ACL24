@@ -173,13 +173,19 @@ def completeness_and_conciseness_eval(results, logfile):
         conv_ids.append(conv_id + model)
 
         # get gt labels and pred labels
+        
+        # 인간작성 KeyFact 기반으로 인간평가자가 평가한 각 KeyFact별 (Summary에 언급된) 포함 여부 -> Completeness 계산에 필요
         gt_alignment_labels = get_aggregate_gt_labels(result['raw_annotations'], key="key_fact_labels")
+        # 인간작성 KeyFact 기반으로 인간평가자가 각 Summary Sentence별 대응 KeyFact 존재여부 판별한 결과 -> Conciseness 계산에 필요
         gt_sentence_line_numbers = get_aggregate_gt_labels(result['raw_annotations'], key="sentence_labels")
+
+        # LLM Evaluator가 평가한 각 KeyFact별 (Summary에 언급된) 포함 여부 -> Completeness 계산에 필요
         pred_alignment_labels = result['pred_alignment_labels']
+        # LLM Evaluator가 각 Summary Sentence별 대응 KeyFact 존재여부 판별한 결과 -> Conciseness 계산에 필요
         pred_sentence_line_numbers = result['pred_sentence_line_numbers']
 
         # failure cases
-        if len(gt_alignment_labels) != len(pred_alignment_labels):
+        if len(gt_alignment_labels) != len(pred_alignment_labels): # 동일한, 사전작성된 KeyFact List 기반으로 수행한 결과를 예상하고 있으므로 길이 다르면 실패한 케이스로 해석
             continue
         _gt_alignment_labels, _pred_alignment_labels = [], []
         for idx, item in enumerate(gt_alignment_labels):
@@ -368,8 +374,11 @@ def rank_correlation(model_wise_results, key, min_number=5):
     model_list =  model_wise_results.keys()
 
     models = []
+    
+    # 각 요약모델 별로 인간평가자 및 LLM Judge가 부여한 평균 
     gt_errors = []
     pred_errors = []
+    
     for model_name in model_list:
         models.append(model_name)
         gt_error, pred_error = np.mean(model_wise_results[model_name]['gt_' + key]), np.mean(model_wise_results[model_name]['pred_' + key])
@@ -378,8 +387,8 @@ def rank_correlation(model_wise_results, key, min_number=5):
             gt_errors.append(gt_error)
             pred_errors.append(pred_error)
 
-    pred_errors = np.array(pred_errors) 
-    gt_errors = np.array(gt_errors) 
+    pred_errors = np.array(pred_errors)
+    gt_errors = np.array(gt_errors)
 
     estimated_rank = ss.rankdata(pred_errors)
     human_rank = ss.rankdata(gt_errors)
